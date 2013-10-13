@@ -16,15 +16,15 @@ class BoardUtils:
         print '\n'
 
     @staticmethod
-    def gameFinished (board):
+    def gameFinished (board, nextMoveColor):
         for i in range(BoardUtils.BOARD_SIZE):
             for j in range(BoardUtils.BOARD_SIZE):
-                if (BoardUtils.isLegalMove([i,j], board)):
+                if (BoardUtils.isLegalMove([i,j], board, nextMoveColor)):
                     return False
         return True
 
     @staticmethod
-    def isLegalMove (move, board):
+    def isLegalMove (move, board, color):
         if (move[0]>=BoardUtils.BOARD_SIZE or move[0]<0 or move[1]>=BoardUtils.BOARD_SIZE or move[1]<0):
             return False
         if (BoardUtils.isOccupied(move, board)):

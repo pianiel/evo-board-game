@@ -28,13 +28,13 @@ class Game:
         self.board[BoardUtils.BOARD_SIZE/2-1][BoardUtils.BOARD_SIZE/2] = 2
     
     def play (self):
-        while (not BoardUtils.gameFinished(self.board)):
+        while (not BoardUtils.gameFinished(self.board, self.nextPlayer)):
             move = [-1,-1]
             if (self.nextPlayer == 1):
                 move = self.blackPlayer.move(self.board, self.nextPlayer)
             else:
                 move = self.whitePlayer.move(self.board, self.nextPlayer)
-            if (BoardUtils.isLegalMove(move, self.board)):
+            if (BoardUtils.isLegalMove(move, self.board, self.nextPlayer)):
                 self.makeMove(move)
             else:
                 raise IllegalMoveException(move)
@@ -43,6 +43,7 @@ class Game:
 
 
     def makeMove (self, move):
+        #TODO make a proper move (switch other tokens)
         self.board[move[0]][move[1]] = self.nextPlayer
         self.nextPlayer = self.nextPlayer % 2 + 1
 

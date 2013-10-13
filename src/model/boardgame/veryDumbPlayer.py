@@ -1,5 +1,4 @@
-# VERY dumb player trying to put a token in the first empty field it sees
-# WILL cause illegal move exceptions once proper game logic is implemented
+# Very Dumb player, returns first legal move it sees
 
 from boardUtils import *
 
@@ -10,6 +9,6 @@ class VeryDumbPlayer:
     def move (self, board, myColor):
         for i in range (BoardUtils.BOARD_SIZE):
             for j in range (BoardUtils.BOARD_SIZE):
-                if (not BoardUtils.isOccupied([i,j], board)):
+                if (BoardUtils.isLegalMove([i,j], board, myColor)):
                     return [i,j]
 
