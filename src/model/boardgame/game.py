@@ -13,7 +13,7 @@ class IllegalMoveException(Exception):
     def __init__(self, move):
         self.move = move
     def __str__(self):
-        return "Illegal move, trying to put token in "+str(move[0])+ ","+ str(move[1])
+        return "Illegal Move Exception: Trying to put token in "+str(self.move[0])+ ","+ str(self.move[1])
 
 class Game:
 
@@ -37,7 +37,7 @@ class Game:
             if (BoardUtils.isLegalMove(move, self.board)):
                 self.makeMove(move)
             else:
-                raise IllegalMoveException()
+                raise IllegalMoveException(move)
             BoardUtils.prettyPrint(self.board)
         #TODO return winner? notify winners?
 
@@ -48,4 +48,7 @@ class Game:
 
 print "Let's play a game..."
 game = Game(VeryDumbPlayer(), VeryDumbPlayer())
-game.play()
+try:
+    game.play()
+except IllegalMoveException as e:
+    print e
