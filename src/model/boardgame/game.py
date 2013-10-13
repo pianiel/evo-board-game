@@ -39,13 +39,18 @@ class Game:
             else:
                 raise IllegalMoveException(move)
             BoardUtils.prettyPrint(self.board)
+        winner = BoardUtils.determineWinner(self.board, self.nextPlayer)
         #TODO return winner? notify winners?
+        if (winner > 0):
+            print "The winner is: ", winner
+        else:
+            print "Draw!"
 
 
     def makeMove (self, move):
         #TODO make a proper move (switch other tokens)
         self.board[move[0]][move[1]] = self.nextPlayer
-        self.nextPlayer = self.nextPlayer % 2 + 1
+        self.nextPlayer = BoardUtils.otherPlayer(self.nextPlayer)
 
 print "Let's play a game..."
 game = Game(VeryDumbPlayer(), VeryDumbPlayer())

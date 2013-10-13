@@ -38,3 +38,27 @@ class BoardUtils:
             return False
         return True
 
+    @staticmethod
+    def otherPlayer (player):
+        return player % 2 + 1
+
+    #we assume that the game is finished
+    @staticmethod
+    def determineWinner (board, nextMoveColor):
+        nextPlayers = 0
+        previousPlayers = 0
+        for row in board:
+            for field in row:
+                if (field == nextMoveColor):
+                    nextPlayers = nextPlayers + 1
+                if (field == BoardUtils.otherPlayer(nextMoveColor)):
+                    previousPlayers = previousPlayers + 1;
+                if (field == 0):
+                    #there are still blank fields, but next player has no legal move to make (because the game is finished)
+                    return BoardUtils.otherPlayer(nextMoveColor)
+        if (nextPlayers > previousPlayers):
+            return nextMoveColor
+        if (nextPlayers < previousPlayers):
+            return BoardUtils.otherPlayer(nextMoveColor)
+        return 0
+                
