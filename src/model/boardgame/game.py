@@ -48,8 +48,7 @@ class Game:
 
 
     def makeMove (self, move):
-        #TODO make a proper move (switch other tokens)
-        self.board[move[0]][move[1]] = self.nextPlayer
+        self.board = BoardUtils.applyMove(move, self.board, self.nextPlayer)
         self.nextPlayer = BoardUtils.otherPlayer(self.nextPlayer)
 
 print "Let's play a game..."
