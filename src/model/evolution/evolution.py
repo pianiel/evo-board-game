@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import random
-from boardgame.game import *
-from boardgame.boardUtils import *
+from src.model.boardgame.game import *
+from src.model.boardgame.boardUtils import *
 
 
 class Agent(object):

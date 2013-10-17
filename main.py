@@ -1,5 +1,7 @@
-import src.model.boardgame
-import src.model.evolution
+from src.model import *
 import src.gui
-
 print "hello"
+
+from src.model.evolution.evolution import main
+
+main()

@@ -61,19 +61,18 @@ class Game:
         self.board = BoardUtils.applyMove(move, self.board, self.nextPlayer)
         self.nextPlayer = BoardUtils.otherPlayer(self.nextPlayer)
 
+if __name__ == '__main__':
+    #example usage:
+    print "Let's play a game..."
 
-#example usage:
-print "Let's play a game..."
-
-player1 = VeryDumbPlayer("Zygfryd")
-player2 = VeryDumbPlayer("Szczepan")
-game = Game(player1, player2)
-try:
-    game.play()
-    if not game.getWinner() == None:
-        print "The winner is:", game.getWinner().getName()
-    else:
-        print "Draw!"
-except IllegalMoveException as e:
-    print e
-
+    player1 = VeryDumbPlayer("Zygfryd")
+    player2 = VeryDumbPlayer("Szczepan")
+    game = Game(player1, player2)
+    try:
+        game.play()
+        if not game.getWinner() == None:
+            print "The winner is:", game.getWinner().getName()
+        else:
+            print "Draw!"
+    except IllegalMoveException as e:
+        print e
