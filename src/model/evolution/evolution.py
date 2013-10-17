@@ -190,7 +190,7 @@ class Agent(object):
 
 class Algorithm(object):
     """docstring for Algorithm"""
-    def __init__(self, population_size=8, iterations=100, starting_energy=10):
+    def __init__(self, population_size=30, iterations=40, starting_energy=20):
         super(Algorithm, self).__init__()
         self.population_size = population_size
         self.iterations = iterations
@@ -200,9 +200,9 @@ class Algorithm(object):
 
         # TODO tinker :P
         self.empty_solution = []
-        self.REPRODUCTION_PROB = 1.5
-        self.FIGHT_ENERGY = 2
-        self.REPRODUCTION_ENERGY = 4
+        self.REPRODUCTION_PROB = 1.2
+        self.FIGHT_ENERGY = 5
+        self.REPRODUCTION_ENERGY = 7
         self.MUTATION_SEED = 0.1
 
     def random_solution(self):
@@ -220,14 +220,20 @@ class Algorithm(object):
                 i = 1.0
         return solution
 
-    def child_solution(self, sol1, sol2):
+    def child_solution(self, sol1, sol2, prob):
         new_solution = []
-        i = random.randrange(0,10)
-        for j in range(10):
-            if j<=i:
-                new_solution.append(sol1[j])
+        # i = random.randrange(0,10)
+        # for j in range(10):
+        #     if j<=i:
+        #         new_solution.append(sol1[j])
+        #     else:
+        #         new_solution.append(sol2[j])
+        print "Prob:", prob
+        for i in range(len(sol1)):
+            if random.random() < prob:
+                new_solution.append(sol1[i])
             else:
-                new_solution.append(sol2[j])
+                new_solution.append(sol2[i])
         return self.mutate(new_solution)
 
     def generate_solution(self, energy=None, solution=None):
@@ -286,7 +292,10 @@ class Algorithm(object):
             i += 2
 
     def reproduce(self, agent1, agent2):
-        child_solution = self.child_solution(agent1.solution, agent2.solution)
+        child_solution = self.child_solution(agent1.solution, agent2.solution, agent1.energy/(0.0 + agent1.energy + agent2.energy))
+        print agent1.solution
+        print agent2.solution
+        print child_solution
         agent1.energy = agent1.energy - self.REPRODUCTION_ENERGY
         agent2.energy = agent2.energy - self.REPRODUCTION_ENERGY
         child_energy = 2 * self.REPRODUCTION_ENERGY
@@ -333,6 +342,15 @@ def main():
     game = Game (best[0], VeryDumbPlayer("Stach"))
     game.play()
     print 'WINNER: ',game.getWinner()
+
+
+def arena():
+    winning_sol = [0.137084160956074, -0.901677335187183, -0.5749441872722376, 0.4545736864652825, -0.6748748484051388, -0.7463435804098713, -0.7544998282254556, -0.30856498877213845, 0.5810020651812795, 0.039626273905303044]
+    dumb = VeryDumbPlayer("test")
+    agent = Agent(10, "agent", winning_sol)
+    game = Game (agent, dumb)
+    game.play()
+    print game.getWinner()
 
 if __name__ == '__main__':
     main()
