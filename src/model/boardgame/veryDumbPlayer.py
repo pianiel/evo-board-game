@@ -3,8 +3,8 @@
 from boardUtils import *
 
 class VeryDumbPlayer:
-    def  __init__(self):
-        pass
+    def  __init__(self, name):
+        self.name = name
 
     def move (self, board, myColor):
         for i in range (BoardUtils.BOARD_SIZE):
@@ -12,3 +12,5 @@ class VeryDumbPlayer:
                 if (BoardUtils.isLegalMove([i,j], board, myColor)):
                     return [i,j]
 
+    def getName (self):
+        return self.name
