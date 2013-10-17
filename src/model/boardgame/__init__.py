@@ -1,1 +1,1 @@
-all = ['game, boardUtils, veryDumbPlayer']
+all = ['game', 'boardUtils', 'veryDumbPlayer']

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Very Dumb player, returns first legal move it sees
 
 from boardUtils import *

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Board utilities class
 # useful functions used both by the players and the game
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Game class
 # Represents the current state of the board and logic behind the game
 # Calls players passed to the constructor when it is their time to move
@@ -22,6 +24,7 @@ class Game:
         self.nextPlayer = 1
         self.blackPlayer = blackPlayer
         self.winner = None
+        self.loser = None
         self.whitePlayer = whitePlayer
         self.board[BoardUtils.BOARD_SIZE/2][BoardUtils.BOARD_SIZE/2] = 1
         self.board[BoardUtils.BOARD_SIZE/2-1][BoardUtils.BOARD_SIZE/2-1] = 1
@@ -39,15 +42,20 @@ class Game:
                 self.makeMove(move)
             else:
                 raise IllegalMoveException(move)
-            BoardUtils.prettyPrint(self.board)
+            #BoardUtils.prettyPrint(self.board)
         winner = BoardUtils.determineWinner(self.board, self.nextPlayer)
         if (winner == 1):
             self.winner=self.blackPlayer
+            self.loser=self.whitePlayer
         elif (winner == 2):
             self.winner=self.whitePlayer
+            self.loser=self.blackPlayer
 
     def getWinner (self):
         return self.winner
+
+    def getLoser (self):
+        return self.loser
 
     def makeMove (self, move):
         self.board = BoardUtils.applyMove(move, self.board, self.nextPlayer)
