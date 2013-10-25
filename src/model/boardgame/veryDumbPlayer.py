@@ -15,4 +15,7 @@ class VeryDumbPlayer:
                     return [i,j]
 
     def getName (self):
-        return self.name
+        return "VeryDumbPlayer:" + self.name
+
+    def __str__(self):
+        return self.getName()

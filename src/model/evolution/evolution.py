@@ -352,5 +352,15 @@ def arena():
     game.play()
     print game.getWinner()
 
+
+def humanarena():
+    winning_sol = [0.137084160956074, -0.901677335187183, -0.5749441872722376, 0.4545736864652825, -0.6748748484051388, -0.7463435804098713, -0.7544998282254556, -0.30856498877213845, 0.5810020651812795, 0.039626273905303044]
+    human = HumanPlayer("human")
+    agent = Agent(10, "agent", winning_sol)
+    game = Game (human,agent)
+    game.play()
+    print game.getWinner()
+
+
 if __name__ == '__main__':
     main()

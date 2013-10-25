@@ -10,6 +10,7 @@
 
 from boardUtils import *
 from veryDumbPlayer import *
+from humanPlayer import *
 
 class IllegalMoveException(Exception):
     def __init__(self, move):
