@@ -33,8 +33,10 @@ class Game:
         self.board[BoardUtils.BOARD_SIZE/2-1][BoardUtils.BOARD_SIZE/2] = 2
     
     def play (self):
-        while (not BoardUtils.gameFinished(self.board, self.nextPlayer)):
+        while (not BoardUtils.gameFinished(self.board)):
             move = [-1,-1]
+            if not BoardUtils.hasMove(self.board, self.nextPlayer):
+                self.nextPlayer = BoardUtils.otherPlayer(self.nextPlayer)
             if (self.nextPlayer == 1):
                 move = self.blackPlayer.move(self.board, self.nextPlayer)
             else:

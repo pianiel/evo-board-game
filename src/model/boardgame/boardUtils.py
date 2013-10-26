@@ -20,13 +20,17 @@ class BoardUtils:
         print '\n'
 
     @staticmethod
-    def gameFinished (board, nextMoveColor):
+    def gameFinished (board):
+        return not (BoardUtils.hasMove(board, 1) or BoardUtils.hasMove(board, 2))
+
+    @staticmethod
+    def hasMove (board, nextMoveColor):
         for i in range(BoardUtils.BOARD_SIZE):
             for j in range(BoardUtils.BOARD_SIZE):
                 if (BoardUtils.isLegalMove([i,j], board, nextMoveColor)):
-                    return False
-        return True
-
+                    return True
+        return False
+    
     @staticmethod
     def isLegalMove (move, board, color):
         if not BoardUtils.liesWithinBoard(move, board):
@@ -123,9 +127,6 @@ class BoardUtils:
                     nextPlayers = nextPlayers + 1
                 if (field == BoardUtils.otherPlayer(nextMoveColor)):
                     previousPlayers = previousPlayers + 1;
-                if (field == 0):
-                    #there are still blank fields, but next player has no legal move to make (because the game is finished)
-                    return BoardUtils.otherPlayer(nextMoveColor)
         if (nextPlayers > previousPlayers):
             return nextMoveColor
         if (nextPlayers < previousPlayers):
