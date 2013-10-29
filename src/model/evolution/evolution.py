@@ -350,7 +350,7 @@ def arena():
     agent = Agent(10, "agent", winning_sol)
     game = Game (agent, dumb)
     game.play()
-    print game.getWinner()
+    print "WINNER:", game.getWinner()
 
 
 def humanarena():
@@ -361,7 +361,7 @@ def humanarena():
     #agent = VeryDumbPlayer("Jas")
     game = Game (human,agent)
     game.play()
-    print game.getWinner()
+    print "WINNER:", game.getWinner()
 
 
 if __name__ == '__main__':

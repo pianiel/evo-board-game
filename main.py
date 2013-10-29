@@ -9,4 +9,3 @@ from src.model.evolution.evolution import main, arena, humanarena
 if __name__ == '__main__':
 	#main()
 	humanarena()
-	# humanarena()
