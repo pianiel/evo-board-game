@@ -351,8 +351,9 @@ def arena():
 def humanarena():
     winning_sol = [0.5297582973441479, -0.18090435710351122, 0.806078127357504, 0.11273029578377121, 0.22446989193277034, 0.3408969647586671]
     winning_sol2 = [0.8431720537249556, -0.4896664324024035, 0.9398321632961153, -1.0, 0.002145266660614681, -0.3451639380375208]
+    perfect_sol = [1.0,-0.5,0.8,-0.5,0.1,0.2]
     human = HumanPlayer("human")
-    agent = Agent(10, "agent", winning_sol2)
+    agent = Agent(10, "agent", perfect_sol)
     game = Game (human,agent)
     game.play()
     print "WINNER:", game.getWinner()
