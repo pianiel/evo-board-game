@@ -6,18 +6,20 @@ from src.model.boardgame.boardUtils import *
 CH_BLACK = '#fb0'
 CH_WHITE = '#05f'
 CH_EMPTY = '#eee'
+CH_POSSIBLE = '#f00'
 
 class Example(Frame):
   
-    def __init__(self, parent, board, myColor):
+    def __init__(self, parent, board, myColor, circle_checkers=False):
         Frame.__init__(self, parent)   
          
         self.parent = parent
         self.board = board
         self.myColor = myColor
         self.objIds = {}
+        self.circle_checkers = circle_checkers
         self.initUI()
-        
+
     def initUI(self):
       
         self.parent.title("Othello")
@@ -30,16 +32,10 @@ class Example(Frame):
         self.rowconfigure(3, weight=1)
         self.rowconfigure(5, pad=7)
         
-        # lbl = Label(self, text="Othello")
-        # lbl.grid(sticky=W, pady=4, padx=5)
-        
+
         canvas = Canvas(self, width=400, height=400)
         self.canvas = canvas
-        # bounds = canvas.bbox()
-        # width = bounds[2] - bounds[0]
-        # height = bounds[3] - bounds[1]
-        # print 'width', width
-        # print 'height', height
+       
         self.createBoard()
         # self.redrawBoard(self.board)
 
@@ -47,23 +43,11 @@ class Example(Frame):
         canvas.grid(row=1, column=0, columnspan=2, rowspan=4, 
             padx=5, sticky=E+W+S+N)
         
-        # abtn = Button(self, text="Play", command=self.play)
-        # abtn.grid(row=1, column=3)
-
-        # cbtn = Button(self, text="Close")
-        # cbtn.grid(row=2, column=3, pady=4)
-        
-        # hbtn = Button(self, text="Help")
-        # hbtn.grid(row=5, column=0, padx=5)
-
-        # obtn = Button(self, text="OK")
-        # obtn.grid(row=5, column=3)        
-    
     def createBoard(self):
         n = 8
-        ch_dim = 400/n
-        ch_w = ch_dim
-        ch_h = ch_dim
+        c = 400/n # size of a square with checker
+        d = c/10 # diameter of legal moves indicators
+        pad = c/20
         for col in range(n):
             for row in range(n):
                 ch_id = self.board[row][col]
@@ -74,9 +58,24 @@ class Example(Frame):
                     fill_color = CH_WHITE
                 else:
                     fill_color = CH_EMPTY
+                isLegal = BoardUtils.isLegalMove([row,col], self.board, self.myColor)
                 checker_id = self.canvas.create_rectangle(
-                    1+row*ch_w, 1+col*ch_h, 1+(row+1)*ch_w, 1+(col+1)*ch_h,
+                    1+row*c, 1+col*c, 1+(row+1)*c, 1+(col+1)*c,
+                    outline="#000", fill=fill_color if not self.circle_checkers else CH_EMPTY)
+                if self.circle_checkers and fill_color != CH_EMPTY:
+                    self.canvas.create_oval(
+                    1+row*c+pad, 1+col*c+pad, 1+(row+1)*c-pad, 1+(col+1)*c-pad,
                     outline="#000", fill=fill_color)
+                if isLegal:
+                    red_dot_id =self.canvas.create_oval(
+                        1+row*c+(c-d)/2, 
+                        1+col*c+(c-d)/2, 
+                        1+(row+1)*c-(c-d)/2, 
+                        1+(col+1)*c-(c-d)/2,
+                        outline=CH_POSSIBLE, fill=CH_POSSIBLE)
+                    # binding so a click on the red dot still selects the field
+                    self.canvas.tag_bind(red_dot_id, '<ButtonPress-1>', self.onCheckerClick)
+                    self.objIds[red_dot_id] = (row, col)
                 self.canvas.tag_bind(checker_id, '<ButtonPress-1>', self.onCheckerClick)
                 self.objIds[checker_id] = (row, col)
     
@@ -116,17 +115,11 @@ class Example(Frame):
             self.quit()
 
 
-    def play(self):
-        print "play?"
-        self.parent.chosen_move = "asdasdasda"
-        # self.quit()
-
-
 def show_board_get_move(board, myColor):
     print "asking human to move"
     root = Tk()
     root.geometry("412x402+200+100")
-    app = Example(root, board, myColor)
+    app = Example(root, board, myColor, circle_checkers=False)
     root.mainloop()
     move = root.chosen_move
     print "Chosen_move:", move
