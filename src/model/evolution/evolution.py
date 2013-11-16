@@ -13,11 +13,10 @@ class Agent(object):
         self.energy = energy
         self.startingEnergy = energy
         self.solution = solution
+        self.fights_won = 0
+        self.fights_lost = 0
 
     def energy_ratio(self):
-        # 0 <= ratio <= 1
-        # TODO energy dependent ratio
-        #return random.random()
         return self.energy / float (self.startingEnergy)
 
     def calculateScore(self, board, color):
@@ -72,101 +71,101 @@ class Agent(object):
             score = score + self.solution[2]
         if board[BoardUtils.BOARD_SIZE-3][BoardUtils.BOARD_SIZE-1] == 1:
             score = score + self.solution[2]
-        #middle field on edge
+        #middle field on edge #changed solution index from 3 to 2 [unified these fields]
         if board[3][0] == 1:
-            score = score + self.solution[3]
+            score = score + self.solution[2]
         if board[BoardUtils.BOARD_SIZE-1][3] == 1:
-            score = score + self.solution[3]
+            score = score + self.solution[2]
         if board[0][BoardUtils.BOARD_SIZE-4] == 1:
-            score = score + self.solution[3]
+            score = score + self.solution[2]
         if board[BoardUtils.BOARD_SIZE-1][BoardUtils.BOARD_SIZE-4] == 1:
-            score = score + self.solution[3]
+            score = score + self.solution[2]
         if board[0][3] == 1:
-            score = score + self.solution[3]
+            score = score + self.solution[2]
         if board[BoardUtils.BOARD_SIZE-4][0] == 1:
-            score = score + self.solution[3]
+            score = score + self.solution[2]
         if board[3][BoardUtils.BOARD_SIZE-1] == 1:
-            score = score + self.solution[3]
+            score = score + self.solution[2]
         if board[BoardUtils.BOARD_SIZE-4][BoardUtils.BOARD_SIZE-1] == 1:
-            score = score + self.solution[3]
-        #next to corner, inside
+            score = score + self.solution[2]
+        #next to corner, inside #changed solution index from 4 to 3
         if board[1][1] == 1:
-            score = score + self.solution[4]
+            score = score + self.solution[3]
         if board[BoardUtils.BOARD_SIZE-2][1] == 1:
-            score = score + self.solution[4]
+            score = score + self.solution[3]
         if board[1][BoardUtils.BOARD_SIZE-2] == 1:
-            score = score + self.solution[4]
+            score = score + self.solution[3]
         if board[BoardUtils.BOARD_SIZE-2][BoardUtils.BOARD_SIZE-2] == 1:
-            score = score + self.solution[4]
-        #next field...
+            score = score + self.solution[3]
+        #next field... #changed solution index from 5 to 4 [unified these fields]
         if board[1][2] == 1:
-            score = score + self.solution[5]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-2][2] == 1:
-            score = score + self.solution[5]
+            score = score + self.solution[4]
         if board[1][BoardUtils.BOARD_SIZE-3] == 1:
-            score = score + self.solution[5]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-2][BoardUtils.BOARD_SIZE-3] == 1:
-            score = score + self.solution[5]
+            score = score + self.solution[4]
         if board[2][1] == 1:
-            score = score + self.solution[5]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-3][1] == 1:
-            score = score + self.solution[5]
+            score = score + self.solution[4]
         if board[2][BoardUtils.BOARD_SIZE-2] == 1:
-            score = score + self.solution[5]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-3][BoardUtils.BOARD_SIZE-2] == 1:
-            score = score + self.solution[5]
-        #next field...
+            score = score + self.solution[4]
+        #next field... #changed solution index from 6 to 4 [unified these fields]
         if board[1][3] == 1:
-            score = score + self.solution[6]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-2][3] == 1:
-            score = score + self.solution[6]
+            score = score + self.solution[4]
         if board[1][BoardUtils.BOARD_SIZE-4] == 1:
-            score = score + self.solution[6]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-2][BoardUtils.BOARD_SIZE-4] == 1:
-            score = score + self.solution[6]
+            score = score + self.solution[4]
         if board[3][1] == 1:
-            score = score + self.solution[6]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-4][1] == 1:
-            score = score + self.solution[6]
+            score = score + self.solution[4]
         if board[3][BoardUtils.BOARD_SIZE-2] == 1:
-            score = score + self.solution[6]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-4][BoardUtils.BOARD_SIZE-2] == 1:
-            score = score + self.solution[6]
-        #on the diameter
+            score = score + self.solution[4]
+        #on the diameter #changed solution index from 7 to 4 [unified these fields]
         if board[2][2] == 1:
-            score = score + self.solution[7]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-3][2] == 1:
-            score = score + self.solution[7]
+            score = score + self.solution[4]
         if board[2][BoardUtils.BOARD_SIZE-3] == 1:
-            score = score + self.solution[7]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-3][BoardUtils.BOARD_SIZE-3] == 1:
-            score = score + self.solution[7]
-        #next field...
+            score = score + self.solution[4]
+        #next field... #changed solution index from 8 to 4 [unified these fields]
         if board[2][3] == 1:
-            score = score + self.solution[8]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-3][3] == 1:
-            score = score + self.solution[8]
+            score = score + self.solution[4]
         if board[2][BoardUtils.BOARD_SIZE-4] == 1:
-            score = score + self.solution[8]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-3][BoardUtils.BOARD_SIZE-4] == 1:
-            score = score + self.solution[8]
+            score = score + self.solution[4]
         if board[3][2] == 1:
-            score = score + self.solution[8]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-4][2] == 1:
-            score = score + self.solution[8]
+            score = score + self.solution[4]
         if board[3][BoardUtils.BOARD_SIZE-3] == 1:
-            score = score + self.solution[8]
+            score = score + self.solution[4]
         if board[BoardUtils.BOARD_SIZE-4][BoardUtils.BOARD_SIZE-3] == 1:
-            score = score + self.solution[8]
-        #middle
+            score = score + self.solution[4]
+        #middle #changed solution index from 9 to 5
         if board[3][3] == 1:
-            score = score + self.solution[9]
+            score = score + self.solution[5]
         if board[BoardUtils.BOARD_SIZE-4][3] == 1:
-            score = score + self.solution[9]
+            score = score + self.solution[5]
         if board[3][BoardUtils.BOARD_SIZE-4] == 1:
-            score = score + self.solution[9]
+            score = score + self.solution[5]
         if board[BoardUtils.BOARD_SIZE-4][BoardUtils.BOARD_SIZE-4] == 1:
-            score = score + self.solution[9]
+            score = score + self.solution[5]
         return score
             
 
@@ -190,7 +189,7 @@ class Agent(object):
 
 class Algorithm(object):
     """docstring for Algorithm"""
-    def __init__(self, population_size=30, iterations=40, starting_energy=20):
+    def __init__(self, population_size=12, iterations=100, starting_energy=10):
         super(Algorithm, self).__init__()
         self.population_size = population_size
         self.iterations = iterations
@@ -200,41 +199,39 @@ class Algorithm(object):
 
         # TODO tinker :P
         self.empty_solution = []
-        self.REPRODUCTION_PROB = 1.2
-        self.FIGHT_ENERGY = 5
-        self.REPRODUCTION_ENERGY = 7
-        self.MUTATION_SEED = 0.1
+        self.REPRODUCTION_PROB = 1.5
+        self.FIGHT_ENERGY = 2
+        self.REPRODUCTION_ENERGY = 5
+        self.MUTATION_SEED = 0.2
 
     def random_solution(self):
         new_solution = []
-        for i in range(10):
+        for i in range(6):
             new_solution.append(random.uniform(-1.0,1.0))
         return new_solution
 
     def mutate(self, solution):
+        mutated = []
         for i in solution:
             i=i+random.uniform(-1*self.MUTATION_SEED, self.MUTATION_SEED)
             if i < -1.0:
                 i = -1.0
             if i > 1.0:
                 i = 1.0
-        return solution
+            mutated.append(i)
+        return mutated
 
-    def child_solution(self, sol1, sol2, prob):
-        new_solution = []
-        # i = random.randrange(0,10)
-        # for j in range(10):
-        #     if j<=i:
-        #         new_solution.append(sol1[j])
-        #     else:
-        #         new_solution.append(sol2[j])
-        print "Prob:", prob
+    def child_solutions(self, sol1, sol2, prob = 0.5):
+        new_solution1 = []
+        new_solution2 = []
         for i in range(len(sol1)):
             if random.random() < prob:
-                new_solution.append(sol1[i])
+                new_solution1.append(sol1[i])
+                new_solution2.append(sol2[i])
             else:
-                new_solution.append(sol2[i])
-        return self.mutate(new_solution)
+                new_solution1.append(sol2[i])
+                new_solution2.append(sol1[i])
+        return [self.mutate(new_solution1), self.mutate(new_solution2)]
 
     def generate_solution(self, energy=None, solution=None):
         if solution is None:
@@ -251,7 +248,7 @@ class Algorithm(object):
     
     def run(self):
         for i in range(self.iterations):
-            print '#####'
+            print '###################################################'
             print 'step ' + str(i)
             self.step()
 
@@ -287,19 +284,21 @@ class Algorithm(object):
         size = size if size % 2 == 0 else size-1
         i = 0
         while i < size:
-            # print "next pair:", pool[i], pool[i+1]
             yield pool[i], pool[i+1]
             i += 2
 
     def reproduce(self, agent1, agent2):
-        child_solution = self.child_solution(agent1.solution, agent2.solution, agent1.energy/(0.0 + agent1.energy + agent2.energy))
+        child_solutions = self.child_solutions(agent1.solution, agent2.solution)#, agent1.energy/(0.0 + agent1.energy + agent2.energy))
+        print 'PARENTS:'
         print agent1.solution
         print agent2.solution
-        print child_solution
+        print 'CHILDREN:'
+        print child_solutions[0]
+        print child_solutions[1]
         agent1.energy = agent1.energy - self.REPRODUCTION_ENERGY
         agent2.energy = agent2.energy - self.REPRODUCTION_ENERGY
-        child_energy = 2 * self.REPRODUCTION_ENERGY
-        self.population.append(self.generate_solution(energy=child_energy, solution=child_solution))
+        self.population.append(self.generate_solution(energy=self.REPRODUCTION_ENERGY, solution=child_solutions[0]))
+        self.population.append(self.generate_solution(energy=self.REPRODUCTION_ENERGY, solution=child_solutions[1]))
 
     
     def fight(self, agent1, agent2):
@@ -311,18 +310,15 @@ class Algorithm(object):
         except IllegalMoveException as e:
             print e
 
-        '''if random.random() < 0.5:
-            self.transfer_energy(agent1, agent2, self.FIGHT_ENERGY)
-        else:
-            self.transfer_energy(agent2, agent1, self.FIGHT_ENERGY)'''
-
     def transfer_energy(self, from_agent, to_agent, energy_amount):
         energy_amount = min(energy_amount, from_agent.energy)
         from_agent.energy -= energy_amount
+        from_agent.fights_lost = from_agent.fights_lost + 1
         to_agent.energy += energy_amount
+        to_agent.fights_won = to_agent.fights_won + 1
 
     def take_best(self):
-        self.population = sorted(self.population, key=lambda ag: ag.energy, reverse=True)
+        self.population = sorted(self.population, key=lambda ag: ag.fights_won/(ag.fights_won+ag.fights_lost+2), reverse=True)#constant added to push those who won i.e 1 fight and lost none lower
         return self.population
 
     def print_solutions(self):
@@ -335,7 +331,6 @@ def main():
     alg.generate_population()
     alg.print_solutions()
     alg.run()
-    # alg.print_solutions()
     best = alg.take_best()
     print 'BEST:'
     alg.print_solutions()
@@ -345,7 +340,7 @@ def main():
 
 
 def arena():
-    winning_sol = [0.137084160956074, -0.901677335187183, -0.5749441872722376, 0.4545736864652825, -0.6748748484051388, -0.7463435804098713, -0.7544998282254556, -0.30856498877213845, 0.5810020651812795, 0.039626273905303044]
+    winning_sol = [0.5297582973441479, -0.18090435710351122, 0.806078127357504, 0.11273029578377121, 0.22446989193277034, 0.3408969647586671]
     dumb = VeryDumbPlayer("test")
     agent = Agent(10, "agent", winning_sol)
     game = Game (agent, dumb)
@@ -354,11 +349,10 @@ def arena():
 
 
 def humanarena():
-    winning_sol = [0.137084160956074, -0.901677335187183, -0.5749441872722376, 0.4545736864652825, -0.6748748484051388, -0.7463435804098713, -0.7544998282254556, -0.30856498877213845, 0.5810020651812795, 0.039626273905303044]
-    winning_sol2 = [0.7206476224122635, 0.6694299796651946, 0.7043695228289755, 0.4869212124849067, 0.494939566058608, -0.7954962220721322, 0.9771034421295399, 0.24002717096971815, 0.7998616857550307, 0.40345965254097993]
+    winning_sol = [0.5297582973441479, -0.18090435710351122, 0.806078127357504, 0.11273029578377121, 0.22446989193277034, 0.3408969647586671]
+    winning_sol2 = [0.8431720537249556, -0.4896664324024035, 0.9398321632961153, -1.0, 0.002145266660614681, -0.3451639380375208]
     human = HumanPlayer("human")
     agent = Agent(10, "agent", winning_sol2)
-    #agent = VeryDumbPlayer("Jas")
     game = Game (human,agent)
     game.play()
     print "WINNER:", game.getWinner()
