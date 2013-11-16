@@ -359,5 +359,33 @@ def humanarena():
     print "WINNER:", game.getWinner()
 
 
+def monkeyrun(n):
+    perfect_sol = [1.0,-0.5,0.8,-0.5,0.1,0.2]
+    perfect = Agent(10, "Mr. Perfect", perfect_sol)
+    alg = Algorithm()
+    draws = []
+    fails = []
+    for i in range(n):
+        candidate = Agent(10, "Mr. Random", alg.random_solution())
+        game = Game(perfect, candidate)
+        game.play()
+        winner = game.getWinner()
+        if winner == None:
+            draws.append(candidate)
+        elif winner != perfect:
+            fails.append(winner)
+    print 'Lost to:'
+    for agent in fails:
+        print agent
+    print 'Drew with:'
+    for agent in draws:
+        print agent
+    solutions = [agent.solution for agent in fails]
+    print perfect, "Won", n - len(fails), "out of", n
+    # mean = [sum(group)/len(group) for group in zip(*solutions)]
+    # print 'mean:', mean
+
+
+
 if __name__ == '__main__':
     main()
