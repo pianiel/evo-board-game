@@ -9,5 +9,5 @@ from src.model.evolution.evolution import main, arena, humanarena, monkeyrun
 if __name__ == '__main__':
 	#main()
 	# arena()
-	# humanarena()
-	monkeyrun(50)
+	humanarena()
+	# monkeyrun(50)

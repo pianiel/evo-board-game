@@ -30,33 +30,38 @@ class Example(Frame):
         self.rowconfigure(3, weight=1)
         self.rowconfigure(5, pad=7)
         
-        lbl = Label(self, text="Othello")
-        lbl.grid(sticky=W, pady=4, padx=5)
+        # lbl = Label(self, text="Othello")
+        # lbl.grid(sticky=W, pady=4, padx=5)
         
-        canvas = Canvas(self)
+        canvas = Canvas(self, width=400, height=400)
         self.canvas = canvas
+        # bounds = canvas.bbox()
+        # width = bounds[2] - bounds[0]
+        # height = bounds[3] - bounds[1]
+        # print 'width', width
+        # print 'height', height
         self.createBoard()
         # self.redrawBoard(self.board)
 
         canvas.pack(fill=BOTH, expand=1)
         canvas.grid(row=1, column=0, columnspan=2, rowspan=4, 
             padx=5, sticky=E+W+S+N)
-
-        abtn = Button(self, text="Play", command=self.play)
-        abtn.grid(row=1, column=3)
-
-        cbtn = Button(self, text="Close")
-        cbtn.grid(row=2, column=3, pady=4)
         
-        hbtn = Button(self, text="Help")
-        hbtn.grid(row=5, column=0, padx=5)
+        # abtn = Button(self, text="Play", command=self.play)
+        # abtn.grid(row=1, column=3)
 
-        obtn = Button(self, text="OK")
-        obtn.grid(row=5, column=3)        
+        # cbtn = Button(self, text="Close")
+        # cbtn.grid(row=2, column=3, pady=4)
+        
+        # hbtn = Button(self, text="Help")
+        # hbtn.grid(row=5, column=0, padx=5)
+
+        # obtn = Button(self, text="OK")
+        # obtn.grid(row=5, column=3)        
     
     def createBoard(self):
         n = 8
-        ch_dim = 50
+        ch_dim = 400/n
         ch_w = ch_dim
         ch_h = ch_dim
         for col in range(n):
@@ -120,7 +125,7 @@ class Example(Frame):
 def show_board_get_move(board, myColor):
     print "asking human to move"
     root = Tk()
-    root.geometry("490x465+200+100")
+    root.geometry("412x402+200+100")
     app = Example(root, board, myColor)
     root.mainloop()
     move = root.chosen_move
