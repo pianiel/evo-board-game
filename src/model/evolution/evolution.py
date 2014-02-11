@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
 import random
+import json
 from src.model.boardgame.game import *
 from src.model.boardgame.boardUtils import *
+
+
+DEBUG = True
+DEBUG = False
 
 
 class Agent(object):
@@ -189,20 +194,20 @@ class Agent(object):
 
 class Algorithm(object):
     """docstring for Algorithm"""
-    def __init__(self, population_size=12, iterations=100, starting_energy=10):
+    def __init__(self, **kw):
         super(Algorithm, self).__init__()
-        self.population_size = population_size
-        self.iterations = iterations
         self.population = []
         self.last_agent_id = -1
-        self.starting_energy = starting_energy
-
-        # TODO tinker :P
         self.empty_solution = []
-        self.REPRODUCTION_PROB = 1.5
-        self.FIGHT_ENERGY = 2
-        self.REPRODUCTION_ENERGY = 5
-        self.MUTATION_SEED = 0.2
+
+        self.starting_energy = kw.get('STARTING_ENERGY', 10)
+        self.population_size = kw.get('POPULATION_SIZE', 12)
+        self.iterations = kw.get('ITERATIONS', 30)
+
+        self.REPRODUCTION_THRESH = kw.get('REPRODUCTION_THRESH', 1.5)
+        self.FIGHT_ENERGY = kw.get('FIGHT_ENERGY', 2)
+        self.REPRODUCTION_ENERGY = kw.get('REPRODUCTION_ENERGY', 5)
+        self.MUTATION_SEED = kw.get('MUTATION_SEED', 0.2)
 
     def random_solution(self):
         new_solution = []
@@ -236,7 +241,7 @@ class Algorithm(object):
     def generate_solution(self, energy=None, solution=None):
         if solution is None:
             solution = self.random_solution()
-            print solution
+            if DEBUG: print solution
         if energy is None:
             energy = self.starting_energy
         new_agent = Agent(energy, str(self.last_agent_id + 1), solution)
@@ -248,22 +253,24 @@ class Algorithm(object):
     
     def run(self):
         for i in range(self.iterations):
-            print '###################################################'
-            print 'step ' + str(i)
+            if DEBUG: print '---'
+            if DEBUG: print 'step ' + str(i)
+            if i % 10 == 0: print i,
             self.step()
+        print
 
     def step(self):
         reproduction_pool = []
         fighting_pool = []
 
         for agent in self.population:
-            if agent.energy_ratio() > self.REPRODUCTION_PROB:
+            if agent.energy_ratio() > self.REPRODUCTION_THRESH:
                 reproduction_pool.append(agent)
             else:
                 fighting_pool.append(agent)
 
-        print 'reproduction_pool: ' + str(len(reproduction_pool))
-        print 'fighting_pool: ' + str(len(fighting_pool))
+        if DEBUG: print 'reproduction_pool: ' + str(len(reproduction_pool))
+        if DEBUG: print 'fighting_pool: ' + str(len(fighting_pool))
 
         for ag1, ag2 in self.get_pair_from_pool(reproduction_pool):
             self.reproduce(ag1, ag2)
@@ -273,9 +280,9 @@ class Algorithm(object):
 
     
         # remove dead solutions
-        print 'pop size: ' + str(len(self.population))
+        if DEBUG: print 'pop size: ' + str(len(self.population))
         self.population = [agent for agent in self.population if agent.energy > 0]
-        print 'alive pop size: ' + str(len(self.population))
+        if DEBUG: print 'alive pop size: ' + str(len(self.population))
 
 
     def get_pair_from_pool(self, pool):
@@ -289,12 +296,13 @@ class Algorithm(object):
 
     def reproduce(self, agent1, agent2):
         child_solutions = self.child_solutions(agent1.solution, agent2.solution)#, agent1.energy/(0.0 + agent1.energy + agent2.energy))
-        print 'PARENTS:'
-        print agent1.solution
-        print agent2.solution
-        print 'CHILDREN:'
-        print child_solutions[0]
-        print child_solutions[1]
+        if DEBUG: 
+            print 'PARENTS:'
+            print agent1.solution
+            print agent2.solution
+            print 'CHILDREN:'
+            print child_solutions[0]
+            print child_solutions[1]
         agent1.energy = agent1.energy - self.REPRODUCTION_ENERGY
         agent2.energy = agent2.energy - self.REPRODUCTION_ENERGY
         self.population.append(self.generate_solution(energy=self.REPRODUCTION_ENERGY, solution=child_solutions[0]))
@@ -317,8 +325,12 @@ class Algorithm(object):
         to_agent.energy += energy_amount
         to_agent.fights_won = to_agent.fights_won + 1
 
-    def take_best(self):
+    def take_best_win_ratio(self):
         self.population = sorted(self.population, key=lambda ag: ag.fights_won/(ag.fights_won+ag.fights_lost+2), reverse=True)#constant added to push those who won i.e 1 fight and lost none lower
+        return self.population
+
+    def take_best_energy(self):
+        self.population = sorted(self.population, key=lambda ag: ag.energy, reverse=True)
         return self.population
 
     def print_solutions(self):
@@ -331,12 +343,21 @@ def main():
     alg.generate_population()
     alg.print_solutions()
     alg.run()
-    best = alg.take_best()
-    print 'BEST:'
+    best_ratio = alg.take_best_win_ratio()
+    print 'BEST ratio:'
     alg.print_solutions()
-    game = Game (best[0], VeryDumbPlayer("Stach"))
+    dumb = VeryDumbPlayer("Stach")
+    game = Game (best_ratio[0], dumb)
     game.play()
     print 'WINNER: ',game.getWinner()
+    best_energy = alg.take_best_energy()
+    print 'BEST energy:'
+    alg.print_solutions()
+    dumb = VeryDumbPlayer("Stach")
+    game = Game (best_energy[0], dumb)
+    game.play()
+    print 'WINNER: ',game.getWinner()
+
 
 
 def arena():
@@ -386,6 +407,99 @@ def monkeyrun(n):
     # print 'mean:', mean
 
 
+def get_evolved_agents(params_dict):
+    alg = Algorithm(**params_dict)
+    alg.generate_population()
+    if DEBUG: alg.print_solutions()
+    alg.run()
+    best_ratio = alg.take_best_win_ratio()[0]
+    best_energy = alg.take_best_energy()[0]
+    return best_ratio, best_energy
+
+def benchmark_randoms(n_agents, tested_agent):
+    alg = Algorithm()
+    draws = []
+    fails = []
+    print "benchmarking against %d randoms. agent:" % n_agents
+    print tested_agent
+    for i in range(n_agents):
+        if i % 10 == 0: print i,
+        candidate = Agent(10, "Mr. Random", alg.random_solution())
+        game = Game(tested_agent, candidate)
+        game.play()
+        winner = game.getWinner()
+        if winner is None:
+            draws.append(candidate)
+        elif str(winner) != str(tested_agent):
+            fails.append(winner)
+    print
+    won = n_agents - len(fails) - len(draws)
+    if DEBUG: print tested_agent
+    if DEBUG: print "Won:", won, "/", n_agents
+    return float(won)/n_agents
+
+
+def experiments(params, n_randoms):
+    params_names = [
+        'POPULATION_SIZE',
+        'ITERATIONS',
+        'MUTATION_SEED', # mutated dimension +/- random(0,MUTATION_SEED)
+        'REPRODUCTION_THRESH', # energy / starting energy
+        'STARTING_ENERGY',
+        'FIGHT_ENERGY', # energy transferred during fights
+        'REPRODUCTION_ENERGY' # energy transferred during reproductions
+    ]
+    # params = [
+    #     (15, 30,  0.2, 1.5, 10, 2, 5),
+    #     ( 5, 50,  0.2, 1.5, 10, 2, 5),
+    #     (10, 40, 0.15, 1.2, 10, 2, 5),
+    #     (10, 40,  0.3, 1.8, 10, 2, 5)
+    # ]
+    # n_randoms = 200
+    '''
+    [(params_dict, best_ratio_agent, best_energy_agent), ...]
+    '''
+    agent_tuples = []
+
+    for pars in params:
+        params_dict = dict(zip(params_names, pars))
+        print params_dict
+        print 'evolving:'
+        agents = get_evolved_agents(params_dict)
+        agent_tuples.append((params_dict, agents))
+
+    results_randoms = {}
+    for params_dict, (ratio_agent, energy_agent) in agent_tuples:
+        pars = json.dumps(params_dict)
+        perf_ratio = benchmark_randoms(n_randoms, ratio_agent)
+        perf_energy = benchmark_randoms(n_randoms, energy_agent)
+        perfs = {'ratio': perf_ratio, 'energy': perf_energy}
+        results_randoms[pars] = perfs
+
+    print '######'
+    for params, perfs in results_randoms.items():
+        print '###'
+        print params
+        print perfs
+
+
 
 if __name__ == '__main__':
-    main()
+    # main()
+    params_names = [
+        'POPULATION_SIZE',
+        'ITERATIONS',
+        'MUTATION_SEED', # mutated dimension +/- random(0,MUTATION_SEED)
+        'REPRODUCTION_THRESH', # energy / starting energy
+        'STARTING_ENERGY',
+        'FIGHT_ENERGY', # energy transferred during fights
+        'REPRODUCTION_ENERGY' # energy transferred during reproductions
+    ]
+    params = [
+        (15, 30,  0.2, 1.5, 10, 2, 5),
+        ( 5, 50,  0.2, 1.5, 10, 2, 5),
+        (10, 40, 0.15, 1.2, 10, 2, 5),
+        (10, 40,  0.3, 1.8, 10, 2, 5)
+    ]
+    n_randoms = 200
+    experiments(params, n_randoms)
